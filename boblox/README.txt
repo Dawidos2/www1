@@ -1,0 +1,1 @@
+zróbcie skrót od boblox 100% legit i dajcie mu nazwę roblox player i zmieńcie ikonę na roblox ico
