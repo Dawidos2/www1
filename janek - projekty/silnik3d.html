@@ -39,7 +39,7 @@ function _3dto2d(vector3, perspective){
 function drawingCube(origin, side){
 	var cube = [origin, [side/2, side/2, side/2], [-side/2, side/2, side/2], [side/2, -side/2, side/2], [-side/2, -side/2, side/2], [side/2, side/2, -side/2], [-side/2, side/2, -side/2], [side/2, -side/2, -side/2], [-side/2, -side/2, -side/2]]
 	for (var i = 1; i < cube.length; i++){
-	cube[i] = _3dRotation(0, Math.PI/4, Math.PI/4, cube[i])
+	cube[i] = _3dRotation(0, a, 0, cube[i])
 	cube[i][0] = cube[i][0] + cube[0][0]
 	cube[i][1] = cube[i][1] + cube[0][1]
 	cube[i][2] = cube[i][2] + cube[0][2]
