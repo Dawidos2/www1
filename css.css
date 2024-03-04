@@ -1,11 +1,10 @@
 div{
     border: solid;
     width:100%;
-     
-    background-color: blue;
 }
 .kontener{
     display: flex;
+    flex-wrap: wrap;
 }
 img{
     max-width: 100%;
