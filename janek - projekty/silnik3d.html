@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<style>
+body{
+overflow: hidden;
+margin: 0;
+}
+</style>
+</head>
+<body>
+<canvas id="screen"></canvas>
+<script>
+var a = 0
+var perspective = 500
+var c = document.getElementById("screen")
+var ctx = c.getContext("2d")
+var origin = [0, 0, 0]
+var side = 100
+function _3dRotation(yz, xz, xy, vector3){
+	var x = vector3[0]
+	var y = vector3[1]
+	var z = vector3[2]
+	var xRotated = ((x * (Math.cos(yz) * Math.cos(xz))) + (y * ((Math.cos(yz) * Math.sin(xz) * Math.sin(xy)) - (Math.sin(yz) * Math.cos(xy)))) + (z * ((Math.cos(yz) * Math.sin(xz) * Math.cos(xy)) + (Math.sin(yz) * Math.sin(xy)))))
+	var yRotated = ((x * (Math.sin(yz) * Math.cos(xz))) + (y * ((Math.sin(yz) * Math.sin(xz) * Math.sin(xy)) + (Math.cos(yz) * Math.cos(xy)))) + (z * ((Math.sin(yz) * Math.sin(xz) * Math.cos(xy)) - (Math.cos(yz) * Math.sin(xy)))))
+	var zRotated = ((x * -(Math.sin(xz))) + (y * (Math.cos(xz) * Math.sin(xy))) + (z * (Math.cos(xz) * Math.cos(xy))))
+	vector3Rotated = [xRotated, yRotated, zRotated]
+	return vector3Rotated
+}
+function _3dto2d(vector3, perspective){
+	var x = vector3[0]
+	var y = -(vector3[1])
+	var z = vector3[2]
+	x = (x * perspective)/(z + perspective) + c.width/2
+	y = (y * perspective)/(z + perspective) + c.height/2
+	var vector2 = [x, y]
+	return vector2
+}
+function drawingCube(origin, side){
+	var cube = [origin, [side/2, side/2, side/2], [-side/2, side/2, side/2], [side/2, -side/2, side/2], [-side/2, -side/2, side/2], [side/2, side/2, -side/2], [-side/2, side/2, -side/2], [side/2, -side/2, -side/2], [-side/2, -side/2, -side/2]]
+	for (var i = 1; i < cube.length; i++){
+	cube[i] = _3dRotation(0, Math.PI/4, Math.PI/4, cube[i])
+	cube[i][0] = cube[i][0] + cube[0][0]
+	cube[i][1] = cube[i][1] + cube[0][1]
+	cube[i][2] = cube[i][2] + cube[0][2]
+	cube[i] =  _3dto2d(cube [i], perspective)
+	}
+//Pierwszy kwadrat
+	ctx.moveTo(cube[1][0], cube[1][1])
+	ctx.lineTo(cube[2][0], cube[2][1])
+	ctx.moveTo(cube[1][0], cube[1][1])
+	ctx.lineTo(cube[3][0], cube[3][1])
+	ctx.moveTo(cube[4][0], cube[4][1])
+	ctx.lineTo(cube[2][0], cube[2][1])
+	ctx.moveTo(cube[4][0], cube[4][1])
+	ctx.lineTo(cube[3][0], cube[3][1])
+//Połączenie
+	ctx.moveTo(cube[1][0], cube[1][1])
+	ctx.lineTo(cube[5][0], cube[5][1])
+	ctx.moveTo(cube[2][0], cube[2][1])
+	ctx.lineTo(cube[6][0], cube[6][1])
+	ctx.moveTo(cube[3][0], cube[3][1])
+	ctx.lineTo(cube[7][0], cube[7][1])
+	ctx.moveTo(cube[4][0], cube[4][1])
+	ctx.lineTo(cube[8][0], cube[8][1])
+//Drugi kwadrat
+	ctx.moveTo(cube[5][0], cube[5][1])
+	ctx.lineTo(cube[6][0], cube[6][1])
+	ctx.moveTo(cube[5][0], cube[5][1])
+	ctx.lineTo(cube[7][0], cube[7][1])
+	ctx.moveTo(cube[8][0], cube[8][1])
+	ctx.lineTo(cube[6][0], cube[6][1])
+	ctx.moveTo(cube[8][0], cube[8][1])
+	ctx.lineTo(cube[7][0], cube[7][1])
+	ctx.stroke()
+}
+//Wszystko co ma być co "klatkę", daj do heartbeat
+function heartbeat() {
+	setTimeout(function() {
+		a = a + 0.01
+		c.width = window.innerWidth
+		c.height = window.innerHeight
+		ctx.clearRect(0, 0, c.width, c.height)
+		drawingCube(origin, side)
+		heartbeat();
+	}, 10)
+}
+	heartbeat()
+</script>
+</body>
+</html>
